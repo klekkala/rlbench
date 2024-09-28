@@ -5,7 +5,9 @@ import numpy as np
 from pyrep import PyRep
 from pyrep.const import ObjectType
 from rlbench import utils
-from rlbench.action_modes.action_mode import ActionMode
+from rlbench.action_modes.action_mode import MoveArmThenGripper
+from rlbench.action_modes.arm_action_modes import JointVelocity
+from rlbench.action_modes.gripper_action_modes import Discrete
 from rlbench.backend.exceptions import BoundaryError, WaypointError, \
     TaskEnvironmentError
 from rlbench.backend.observation import Observation
@@ -19,6 +21,8 @@ _DT = 0.05
 _MAX_RESET_ATTEMPTS = 40
 _MAX_DEMO_ATTEMPTS = 10
 
+action_mode = MoveArmThenGripper(
+        arm_action_mode=JointVelocity(), gripper_action_mode=Discrete())
 
 class TaskEnvironment(object):
 
@@ -27,7 +31,7 @@ class TaskEnvironment(object):
                  robot: Robot,
                  scene: Scene,
                  task: Task,
-                 action_mode: ActionMode,
+                 action_mode: action_mode,
                  dataset_root: str,
                  obs_config: ObservationConfig,
                  static_positions: bool = False,

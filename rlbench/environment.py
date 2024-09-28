@@ -8,7 +8,9 @@ from pyrep.objects import VisionSensor
 from pyrep.robots.arms.panda import Panda
 
 from rlbench import utils
-from rlbench.action_modes.action_mode import ActionMode
+from rlbench.action_modes.action_mode import MoveArmThenGripper
+from rlbench.action_modes.arm_action_modes import JointVelocity
+from rlbench.action_modes.gripper_action_modes import Discrete
 from rlbench.backend.const import *
 from rlbench.backend.robot import Robot
 from rlbench.backend.scene import Scene
@@ -23,12 +25,14 @@ from rlbench.task_environment import TaskEnvironment
 
 DIR_PATH = dirname(abspath(__file__))
 
+action_mode = MoveArmThenGripper(
+                arm_action_mode=JointVelocity(), gripper_action_mode=Discrete())
 
 class Environment(object):
     """Each environment has a scene."""
 
     def __init__(self,
-                 action_mode: ActionMode,
+                 action_mode: action_mode,
                  dataset_root: str = '',
                  obs_config: ObservationConfig = ObservationConfig(),
                  headless: bool = False,
